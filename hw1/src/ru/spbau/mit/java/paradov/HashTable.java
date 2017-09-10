@@ -1,16 +1,22 @@
 package ru.spbau.mit.java.paradov;
 
-/**
- * Хэш-таблица с закрытой адресацией (на самодельных списках).
- */
+/** Хэш-таблица с закрытой адресацией (на самодельных списках). */
 public class HashTable {
 
-    /**
-     * Создает таблицу с 16 списками.
-     */
+    /** Массив листов, в которых хранятся данные. */
+    private MyList[] table;
+
+    /** Количество элементов в таблице. */
+    private int numOfElements = 0;
+
+    /** Количество листов в таблице. (при создании - 16) */
+    private int numOfLists = 16;
+
+    /** Константа, определяющая, когда количество элементов становится слишком большим. */
+    private final int MAX_SIZE_PER_LIST = 16;
+
+    /** Создает таблицу с 16 списками. */
     public HashTable() {
-        sz = 0;
-        numOfLists = 16;
         table = new MyList[numOfLists];
 
         for (int i = 0; i < numOfLists; i++) {
@@ -24,7 +30,7 @@ public class HashTable {
      * @return количество элементов в таблице
      */
     public int size() {
-        return sz;
+        return numOfElements;
     }
 
     /**
@@ -57,12 +63,12 @@ public class HashTable {
      * @return значение, которое лежало по ключу или null, если такого ключа не было
      */
     public String put(String key, String value) {
-        if (sz > 16 * numOfLists)
-            resize(numOfLists * 16);
+        if (numOfElements > MAX_SIZE_PER_LIST * numOfLists)
+            renumOfElements(MAX_SIZE_PER_LIST * numOfLists);
 
         String toReturn = table[key.hashCode() % numOfLists].put(key, value);
         if (toReturn == null) {
-            sz++;
+            numOfElements++;
         }
 
         return toReturn;
@@ -74,7 +80,7 @@ public class HashTable {
      *
      * @param newNumOfLists новое количество листов в таблице.
      */
-    private void resize(int newNumOfLists) {
+    private void renumOfElements(int newNumOfLists) {
         MyList[] newTable = new MyList[newNumOfLists];
 
         for (int i = 0; i < numOfLists; i++) {
@@ -100,14 +106,12 @@ public class HashTable {
         String toReturn = table[key.hashCode() % numOfLists].remove(key);
 
         if (toReturn != null)
-            sz--;
+            numOfElements--;
 
         return toReturn;
     }
 
-    /**
-     * Очищает хэш-таблицу.
-     */
+    /** Очищает хэш-таблицу. */
     public void clear() {
         table = new MyList[numOfLists];
 
@@ -115,21 +119,7 @@ public class HashTable {
             table[i] = new MyList();
         }
 
-        sz = 0;
+        numOfElements = 0;
     }
 
-    /**
-     * Массив листов, в которых хранятся данные.
-     */
-    private MyList[] table;
-
-    /**
-     * Количество элементов в таблице.
-     */
-    private int sz;
-
-    /**
-     * Количество листов в таблице.
-     */
-    private int numOfLists;
 }

@@ -1,5 +1,6 @@
 import ru.spbau.mit.java.paradov.HashTable;
 
+/** Класс, созданный для того, чтобы протестировать HashTable. */
 public class Main {
     public static void main(String[] args) {
         HashTable h = new HashTable();

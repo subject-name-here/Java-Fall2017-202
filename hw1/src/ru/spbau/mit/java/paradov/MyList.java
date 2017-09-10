@@ -1,15 +1,10 @@
 package ru.spbau.mit.java.paradov;
 
-/**
- * Двусвязный список.
- */
+/** Двусвязный список. */
 public class MyList {
-    /**
-     * Создание пустого двусвязного списка.
-     */
-    public MyList() {
-        head = null;
-    }
+
+    /** Голова двусвязного списка. */
+    private Node head = null;
 
     /**
      * Проверяет, содержится ли элемент с ключом key в списке.
@@ -100,11 +95,6 @@ public class MyList {
         return null;
     }
 
-    /**
-     * Голова двусвязного списка.
-     */
-    private Node head;
-
     public Node getHead() {
         return head;
     }
@@ -122,6 +112,11 @@ public class MyList {
      * а также предыдущий и следующий элемент списка (или null, если таких нет).
      */
     private class Node {
+        private Node next;
+        private Node prev;
+
+        private String key;
+        private String value;
 
         public Node(String key, String value, Node prev, Node next) {
             this.next = next;
@@ -157,12 +152,6 @@ public class MyList {
         public void setPrev(Node newPrev) {
             prev = newPrev;
         }
-
-        private Node next;
-        private Node prev;
-
-        private String key;
-        private String value;
     }
 }
 
