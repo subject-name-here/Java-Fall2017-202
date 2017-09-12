@@ -15,9 +15,9 @@ public class MyList {
     public boolean contains(String key) {
         Node cur = head;
         while (cur != null) {
-            if (key.equals(cur.getKey()))
+            if (key.equals(cur.key))
                 return true;
-            cur = cur.getNext();
+            cur = cur.next;
         }
         return false;
     }
@@ -31,9 +31,9 @@ public class MyList {
     public String get(String key) {
         Node cur = head;
         while (cur != null) {
-            if (key.equals(cur.getKey()))
-                return cur.getVal();
-            cur = cur.getNext();
+            if (key.equals(cur.key))
+                return cur.value;
+            cur = cur.next;
         }
 
         return null;
@@ -50,17 +50,17 @@ public class MyList {
     public String put(String key, String value) {
         Node cur = head;
         while (cur != null) {
-            if (key.equals(cur.getKey())) {
-                String oldVal = cur.getVal();
-                cur.setVal(value);
+            if (key.equals(cur.key)) {
+                String oldVal = cur.value;
+                cur.value = value;
                 return oldVal;
             }
-            cur = cur.getNext();
+            cur = cur.next;
         }
 
         Node newNode = new Node(key, value, null, head);
         if (head != null)
-            head.setPrev(newNode);
+            head.prev = newNode;
         head = newNode;
 
         return null;
@@ -75,21 +75,21 @@ public class MyList {
     public String remove(String key) {
         Node cur = head;
         while (cur != null) {
-            if (key.equals(cur.getKey())) {
-                String oldVal = cur.getVal();
+            if (key.equals(cur.key)) {
+                String oldVal = cur.value;
 
-                if (cur.getPrev() != null)
-                    cur.getPrev().setNext(cur.getNext());
+                if (cur.prev != null)
+                    cur.prev.next = cur.next;
 
-                if (cur.getNext() != null)
-                    cur.getNext().setPrev(cur.getPrev());
+                if (cur.next != null)
+                    cur.next.prev = cur.prev;
 
                 if (cur == head)
                     head = head.next;
 
                 return oldVal;
             }
-            cur = cur.getNext();
+            cur = cur.next;
         }
 
         return null;
@@ -100,11 +100,11 @@ public class MyList {
     }
 
     public String getHeadKey() {
-        return head.getKey();
+        return head.key;
     }
 
     public String getHeadValue() {
-        return head.getVal();
+        return head.value;
     }
 
     /**
@@ -123,34 +123,6 @@ public class MyList {
             this.prev = prev;
             this.key = key;
             this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public String getVal() {
-            return value;
-        }
-
-        public void setVal(String newValue) {
-            value = newValue;
-        }
-
-        public Node getNext() {
-            return next;
-        }
-
-        public void setNext(Node newNext) {
-            next = newNext;
-        }
-
-        public Node getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node newPrev) {
-            prev = newPrev;
         }
     }
 }

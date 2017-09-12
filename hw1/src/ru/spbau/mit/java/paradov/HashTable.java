@@ -40,7 +40,7 @@ public class HashTable {
      * @return true, если ключ найден, и false, если ключ не найден
      */
     public boolean contains(String key) {
-        return table[key.hashCode() % numOfLists].contains(key);
+        return table[hash(key, numOfLists)].contains(key);
     }
 
     /**
@@ -50,7 +50,7 @@ public class HashTable {
      * @return значение по ключу или null, если такого ключа нет
      */
     public String get(String key) {
-        return table[key.hashCode() % numOfLists].get(key);
+        return table[hash(key, numOfLists)].get(key);
     }
 
     /**
@@ -58,15 +58,15 @@ public class HashTable {
      * В случае, если в таблице много элементов (в 16 раз больше, чем листов),
      * увеличивает количество листов перед тем, как добавить новый элемент.
      *
-     * @param key   ключ, по которому кладется значение
+     * @param key ключ, по которому кладется значение
      * @param value значение
      * @return значение, которое лежало по ключу или null, если такого ключа не было
      */
     public String put(String key, String value) {
         if (numOfElements > MAX_SIZE_PER_LIST * numOfLists)
-            renumOfElements(MAX_SIZE_PER_LIST * numOfLists);
+            resize(MAX_SIZE_PER_LIST * numOfLists);
 
-        String toReturn = table[key.hashCode() % numOfLists].put(key, value);
+        String toReturn = table[hash(key, numOfLists)].put(key, value);
         if (toReturn == null) {
             numOfElements++;
         }
@@ -76,16 +76,16 @@ public class HashTable {
 
     /**
      * Увеличичает количество листов в таблице,
-     * чтобы в каждом листе было как можно меньше элементов.
+     * меняет размер массива на заданный и перехэширует все элементы туда.
      *
      * @param newNumOfLists новое количество листов в таблице.
      */
-    private void renumOfElements(int newNumOfLists) {
+    private void resize(int newNumOfLists) {
         MyList[] newTable = new MyList[newNumOfLists];
 
         for (int i = 0; i < numOfLists; i++) {
             while (table[i].getHead() != null) {
-                int newListNum = table[i].getHeadKey().hashCode() % newNumOfLists;
+                int newListNum = hash(table[i].getHeadKey(), newNumOfLists);
                 newTable[newListNum].put(table[i].getHeadKey(), table[i].getHeadValue());
 
                 table[i].remove(table[i].getHeadKey());
@@ -103,7 +103,7 @@ public class HashTable {
      * @return удаленное значение, либо null, если ничего не было
      */
     public String remove(String key) {
-        String toReturn = table[key.hashCode() % numOfLists].remove(key);
+        String toReturn = table[hash(key, numOfLists)].remove(key);
 
         if (toReturn != null)
             numOfElements--;
@@ -120,6 +120,16 @@ public class HashTable {
         }
 
         numOfElements = 0;
+    }
+
+    /**
+     * Функция, вычисляющая хэш строки по модулю переданного числа.
+     * @param key строка, хэш которой нужен
+     * @param mod число, по модулю которого вычисляется хэш
+     * @return хеш строки key по модулю mod
+     */
+    private int hash(String key, int mod) {
+        return key.hashCode() % mod;
     }
 
 }
