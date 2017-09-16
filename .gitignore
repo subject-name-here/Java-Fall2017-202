@@ -3,6 +3,7 @@
 
 # User-specific stuff:
 .idea/**/workspace.xml
+workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
 
@@ -14,6 +15,7 @@
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
+uiDesigner.xml
 
 # Gradle:
 .idea/**/gradle.xml
