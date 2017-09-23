@@ -1,5 +1,7 @@
 package ru.spbau.mit.java.paradov;
 
+import static java.lang.Math.abs;
+
 /** Хэш-таблица с закрытой адресацией (на самодельных списках). */
 public class HashTable {
 
@@ -82,6 +84,10 @@ public class HashTable {
     private void resize(int newNumOfLists) {
         MyList[] newTable = new MyList[newNumOfLists];
 
+        for (int i = 0; i < newNumOfLists; i++) {
+            newTable[i] = new MyList();
+        }
+
         for (int i = 0; i < numOfLists; i++) {
             while (table[i].getHead() != null) {
                 int newListNum = hash(table[i].getHeadKey(), newNumOfLists);
@@ -128,7 +134,7 @@ public class HashTable {
      * @return хеш строки key по модулю mod
      */
     private int hash(String key, int mod) {
-        return key.hashCode() % mod;
+        return abs(key.hashCode()) % mod;
     }
 
 }
