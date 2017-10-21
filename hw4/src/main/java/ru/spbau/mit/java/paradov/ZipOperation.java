@@ -103,7 +103,7 @@ public class ZipOperation {
                     File newFile = new File(path + File.separator
                             + Paths.get(entry.getName()).getFileName().toString());
 
-                    if (!entry.isDirectory()){
+                    if (!entry.getName().endsWith(File.separator)){
                         if (!newFile.createNewFile()) {
                             throw new FileAlreadyExistsException("File collision while extracting files from zip.");
                         }
