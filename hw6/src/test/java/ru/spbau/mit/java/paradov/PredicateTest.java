@@ -15,7 +15,8 @@ public class PredicateTest {
     public void testConstantPredicateTrueWorksCorrectly() {
         Predicate<Integer> classExemplar = arg -> arg % 22229 == 42;
 
-        Predicate<Object> alwaysTrue = classExemplar.ALWAYS_TRUE();
+        @SuppressWarnings("unchecked") //this is okay, because I'm sure it's legal
+        Predicate<Object> alwaysTrue = (Predicate<Object>) classExemplar.ALWAYS_TRUE();
 
         assertTrue(alwaysTrue.apply(42));
         assertTrue(alwaysTrue.apply("String"));
@@ -31,7 +32,8 @@ public class PredicateTest {
     public void testConstantPredicateFalseWorksCorrectly() {
         Predicate<Integer> classExemplar = arg -> arg % 22229 == 42;
 
-        Predicate<Object> alwaysFalse = classExemplar.ALWAYS_FALSE();
+        @SuppressWarnings("unchecked") //this is okay, because I'm sure it's legal
+        Predicate<Object> alwaysFalse = (Predicate<Object>) classExemplar.ALWAYS_FALSE();
 
         assertFalse(alwaysFalse.apply(42));
         assertFalse(alwaysFalse.apply("String"));

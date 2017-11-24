@@ -12,7 +12,7 @@ public interface Predicate <T> extends Function1<T, Boolean> {
      * Type of argument is Object, because it doesn't matter what argument apply() will get.
      * @return predicate with apply() that always returns true
      */
-    default public @NotNull Predicate<Object> ALWAYS_TRUE() {
+    default public @NotNull Predicate<?> ALWAYS_TRUE() {
         return new Predicate<Object>() {
             @Override
             public Boolean apply(Object arg) {
@@ -26,7 +26,7 @@ public interface Predicate <T> extends Function1<T, Boolean> {
      * Type of argument is Object, because it doesn't matter what argument apply() will get.
      * @return predicate with apply() that always returns false
      */
-    default public @NotNull Predicate<Object> ALWAYS_FALSE() {
+    default public @NotNull Predicate<?> ALWAYS_FALSE() {
         return new Predicate<Object>() {
             @Override
             public Boolean apply(Object arg) {

@@ -25,7 +25,7 @@ public interface Function2 <T1, T2, R> {
      * @param <R2> type of result of given function, therefore result of function we return
      * @return function of two arguments - composition of this function and given one
      */
-    default public <R2> @NotNull Function2<T1, T2, R2> compose(@NotNull Function1<R, R2> g) {
+    default public <R2> @NotNull Function2<T1, T2, R2> compose(@NotNull final Function1<R, R2> g) {
         return new Function2<T1, T2, R2>() {
             @Override
             public R2 apply(T1 arg1, T2 arg2) {
@@ -35,36 +35,32 @@ public interface Function2 <T1, T2, R> {
     }
 
     /**
-     * Binds first argument of this function. Result is a function of two arguments
-     * with the same apply() as here, but first argument is ignored
-     * (even its type doesn't matter, now type of a first argument is <code>Object</code>).
-     * Instead of it, as a first argument in apply() we use parameter that we have got here.
-     * @param argToBind argument that will be used as first argument of a result function
-     * @return function of a two arguments, where type of a first argument is <code>Object</code>,
-     * apply() is the same as in this function, but it uses given parameter as a first argument
+     * Binds first argument of this function. Result is a function of one argument
+     * with the same apply() as here, but first argument is bound.
+     * @param argToBind argument that will be bound
+     * @return function of one argument, where apply() is the same as in this function,
+     * but it uses given parameter as a first argument
      */
-    default public @NotNull Function2<Object, T2, R> bind1(T1 argToBind) {
-        return new Function2<Object, T2, R>() {
+    default public @NotNull Function1<T2, R> bind1(final T1 argToBind) {
+        return new Function1<T2, R>() {
             @Override
-            public R apply(Object arg1, T2 arg2) {
+            public R apply(T2 arg2) {
                 return Function2.this.apply(argToBind, arg2);
             }
         };
     }
 
     /**
-     * Binds second argument of this function. Result is a function of two arguments
-     * with the same apply() as here, but second argument is ignored
-     * (even its type doesn't matter, now type of a second argument is <code>Object</code>).
-     * Instead of it, as a second argument in apply() we use parameter that we have got here.
-     * @param argToBind argument that will be used as second argument of a result function
-     * @return function of a two arguments, where type of a second argument is <code>Object</code>,
-     * apply() is the same as in this function, but it uses given parameter as a second argument
+     * Binds second argument of this function. Result is a function of one argument
+     * with the same apply() as here, but second argument is bound.
+     * @param argToBind argument that will be bound
+     * @return function of one argument, where apply() is the same as in this function,
+     * but it uses given parameter as a second argument
      */
-    default public @NotNull Function2<T1, Object, R> bind2(T2 argToBind) {
-        return new Function2<T1, Object, R>() {
+    default public @NotNull Function1<T1, R> bind2(final T2 argToBind) {
+        return new Function1<T1, R>() {
             @Override
-            public R apply(T1 arg1, Object arg2) {
+            public R apply(T1 arg1) {
                 return Function2.this.apply(arg1, argToBind);
             }
         };
@@ -78,12 +74,7 @@ public interface Function2 <T1, T2, R> {
      * @return function of one argument; its apply() is the same as apply() of this function,
      * but first argument is parameter we have got and second argument is free
      */
-    default public @NotNull Function1<T2, R> curry(T1 argToCurry) {
-        return new Function1<T2, R>() {
-            @Override
-            public R apply(T2 arg2) {
-                return Function2.this.apply(argToCurry, arg2);
-            }
-        };
+    default public @NotNull Function1<T2, R> curry(final T1 argToCurry) {
+        return bind1(argToCurry);
     }
 }

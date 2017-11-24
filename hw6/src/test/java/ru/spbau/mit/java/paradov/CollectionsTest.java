@@ -24,7 +24,7 @@ public class CollectionsTest {
         container.add(16);
         container.add(23);
         container.add(42);
-        ArrayList<String> actual = map(tripledIntToStr, container);
+        ArrayList<String> actual = (ArrayList<String>) map(tripledIntToStr, container);
 
         ArrayList<String> expected = new ArrayList<>();
         expected.add("12");
@@ -51,7 +51,7 @@ public class CollectionsTest {
         data.add("foldl");
         data.add("foldr");
 
-        ArrayList<String> actual = filter(p, data);
+        ArrayList<String> actual = (ArrayList<String>) filter(p, data);
 
         ArrayList<String> expected = new ArrayList<>();
         expected.add("filter");
@@ -76,7 +76,7 @@ public class CollectionsTest {
         data.add("foldr");
         data.add("");
 
-        ArrayList<String> actual1 = takeWhile(p, data);
+        ArrayList<String> actual1 = (ArrayList<String>) takeWhile(p, data);
 
         ArrayList<String> expected = new ArrayList<>();
         expected.add("map");
@@ -85,7 +85,7 @@ public class CollectionsTest {
 
         assertArrayEquals(expected.toArray(), actual1.toArray());
 
-        ArrayList<String> actual2 = takeWhile(p.not(), data);
+        ArrayList<String> actual2 = (ArrayList<String>) takeWhile(p.not(), data);
         assertArrayEquals((new ArrayList<String>()).toArray(), actual2.toArray());
     }
 
@@ -104,7 +104,7 @@ public class CollectionsTest {
         data.add("foldr");
         data.add("");
 
-        ArrayList<String> actual1 = takeUnless(p, data);
+        ArrayList<String> actual1 = (ArrayList<String>) takeUnless(p, data);
 
         ArrayList<String> expected = new ArrayList<>();
         expected.add("map");
@@ -113,7 +113,7 @@ public class CollectionsTest {
 
         assertArrayEquals(expected.toArray(), actual1.toArray());
 
-        ArrayList<String> actual2 = takeUnless(p.not(), data);
+        ArrayList<String> actual2 = (ArrayList<String>)takeUnless(p.not(), data);
         assertArrayEquals((new ArrayList<String>()).toArray(), actual2.toArray());
     }
 

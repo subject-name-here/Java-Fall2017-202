@@ -66,26 +66,14 @@ public class Function2Test {
             }
         };
 
-        Function2<Object, Integer, String> evenChecker = checker.bind1(true);
-        Function2<Object, Integer, String> negativeChecker = checker.bind1(false);
+        Function1<Integer, String> evenChecker = checker.bind1(true);
+        Function1<Integer, String> negativeChecker = checker.bind1(false);
 
-        assertEquals("Even", evenChecker.apply(true, -22));
-        assertEquals("Even", evenChecker.apply(false, -22));
-        assertEquals("Even", evenChecker.apply("kitten", -22));
-        assertEquals("Even", evenChecker.apply(-21, -22));
-        assertEquals("Odd", evenChecker.apply(true, -21));
-        assertEquals("Odd", evenChecker.apply(false, -21));
-        assertEquals("Odd", evenChecker.apply("kitten", -21));
-        assertEquals("Odd", evenChecker.apply(-42, -21));
+        assertEquals("Even", evenChecker.apply(-22));
+        assertEquals("Odd", evenChecker.apply(-21));
 
-        assertEquals("Negative", negativeChecker.apply(true, -22));
-        assertEquals("Negative", negativeChecker.apply(false, -22));
-        assertEquals("Negative", negativeChecker.apply("kitten", -22));
-        assertEquals("Negative", negativeChecker.apply(-21, -22));
-        assertEquals("Non-negative", negativeChecker.apply(true, 22));
-        assertEquals("Non-negative", negativeChecker.apply(false, 22));
-        assertEquals("Non-negative", negativeChecker.apply("kitten", 22));
-        assertEquals("Non-negative", negativeChecker.apply(-42, 22));
+        assertEquals("Negative", negativeChecker.apply(-22));
+        assertEquals("Non-negative", negativeChecker.apply(22));
     }
 
     /** Tests if bind2() works as expected. */
@@ -99,12 +87,10 @@ public class Function2Test {
             return result.toString();
         };
 
-        Function2<Integer, Object, String> squareNum = power.bind2(2);
+        Integer k = 2;
+        Function1<Integer, String> squareNum = power.bind2(k);
 
-        assertEquals("9", squareNum.apply(3, 1));
-        assertEquals("9", squareNum.apply(3, 100000));
-        assertEquals("9", squareNum.apply(3, null));
-        assertEquals("9", squareNum.apply(3, "kitten"));
+        assertEquals("9", squareNum.apply(3));
     }
 
     /** Tests if curry() works as expected. */

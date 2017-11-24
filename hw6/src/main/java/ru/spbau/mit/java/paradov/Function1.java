@@ -23,7 +23,7 @@ public interface Function1 <T, R> {
      * @param <R2> type of result of given function, therefore result of function we return
      * @return function of one argument - composition of this and given one
      */
-    default public <R2> @NotNull Function1<T, R2> compose(@NotNull Function1<R, R2> g) {
+    default public <R2> @NotNull Function1<T, R2> compose(@NotNull final Function1<R, R2> g) {
         return new Function1<T, R2>() {
             @Override
             public R2 apply(T arg) {
