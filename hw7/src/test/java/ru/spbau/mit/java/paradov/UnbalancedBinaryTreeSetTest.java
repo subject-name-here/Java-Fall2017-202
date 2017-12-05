@@ -116,7 +116,7 @@ public class UnbalancedBinaryTreeSetTest {
         assertTrue(set.contains(3));
     }
 
-    /** Tests if combitation of adds and removes works as expected. */
+    /** Tests if combination of adds and removes works as expected. */
     @Test
     public void testMultipleAddsAndRemovesWorkCorrectly() {
         UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
