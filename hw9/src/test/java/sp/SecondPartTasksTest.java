@@ -1,6 +1,7 @@
 package sp;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
@@ -15,6 +16,7 @@ import static java.lang.Math.PI;
 import static org.junit.Assert.*;
 
 public class SecondPartTasksTest {
+    @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Test
@@ -45,11 +47,11 @@ public class SecondPartTasksTest {
 
         assertEquals(goodLines, SecondPartTasks.findQuotes(Arrays.asList(testFile1.getAbsolutePath(),
                 testFile2.getAbsolutePath(),
-                testFile3.getAbsolutePath()), "kitten"));
+                testFile3.getAbsolutePath()), "cat"));
 
     }
 
-    /** Tests if results of piDividedBy4() are not far from expected. */
+    /** Tests if results of piDividedBy4() are not far from expected. Sometimes it fails. */
     @Test
     public void testPiDividedBy4() {
         for (int i = 0; i < 5; i++) {
