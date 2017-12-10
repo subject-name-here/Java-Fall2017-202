@@ -2,10 +2,7 @@ package ru.spbau.mit.java.paradov;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.AbstractSet;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Implementation of MyTreeSet, based on AbstractSet. The elements are ordered using their
@@ -14,7 +11,9 @@ import java.util.NoSuchElementException;
  * as a data store, time cost for basic operations (add, remove, contains) can reach O(n).
  * @param <E> type of objects we keep in set
  */
-public class UnbalancedBinaryTreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
+public class UnbalancedBinaryTreeSet<E extends Comparable<? super E>>
+        extends AbstractSet<E> implements MyTreeSet<E> {
+    /** The tree in which we store data and which maintains all the structure. */
     private MyListedTree<E> tree;
 
     /**
@@ -23,7 +22,7 @@ public class UnbalancedBinaryTreeSet<E> extends AbstractSet<E> implements MyTree
      * If they are not, it will throw ClassCastException.
      */
     public UnbalancedBinaryTreeSet() {
-        tree = new MyListedTree<>((t1, t2) -> ((Comparable) t1).compareTo(t2));
+        tree = new MyListedTree<>(Comparator.naturalOrder());
     }
 
     /**
@@ -161,7 +160,6 @@ public class UnbalancedBinaryTreeSet<E> extends AbstractSet<E> implements MyTree
     @Override
     public boolean add(E e) {
         return tree.add(e);
-
     }
 
     /**

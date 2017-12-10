@@ -2,6 +2,9 @@ package ru.spbau.mit.java.paradov;
 
 import org.junit.Test;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.*;
 
 /** Tests methods of UnbalancedTreeSet. */
@@ -217,6 +220,21 @@ public class UnbalancedBinaryTreeSetTest {
         assertEquals(-2, (int) set.last());
     }
 
+
+    /** Tests that first() throws exception. */
+    @Test(expected = NoSuchElementException.class)
+    public void testFirstThrowsException() {
+        UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
+        set.first();
+    }
+
+    /** Tests that last() throws exception. */
+    @Test(expected = NoSuchElementException.class)
+    public void testLastThrowsException() {
+        UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
+        set.last();
+    }
+
     /** Tests that lower() and higher() in small sets work as expected. */
     @Test
     public void testLowerAndHigherInSmallSets() {
@@ -252,7 +270,89 @@ public class UnbalancedBinaryTreeSetTest {
             else
                 assertNull(set.lower(i));
         }
+    }
 
+    /** Tests that iterator walks in the set in right order. */
+    @Test
+    public void testIterator() {
+        UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
+        for (int i = 20; i >= 0; i--) {
+            set.add(i);
+        }
+
+        Iterator<Integer> iterator = set.iterator();
+        int cnt = 0;
+        while (iterator.hasNext()) {
+            assertEquals(cnt++, (int) iterator.next());
+        }
+        assertEquals(21, cnt);
+    }
+
+    /** Tests that descending iterator walks in the set in right (reversed) order. */
+    @Test
+    public void testDescendingIterator() {
+        UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
+        for (int i = 0; i < 10; i++) {
+            set.add(i);
+        }
+        for (int i = 0; i >= -10; i--) {
+            set.add(i);
+        }
+        for (int i = 20; i >= 10; i--) {
+            set.add(i);
+        }
+
+        Iterator<Integer> iterator = set.descendingIterator();
+        int cnt = 20;
+        while (iterator.hasNext()) {
+            assertEquals(cnt--, (int) iterator.next());
+        }
+
+        assertEquals(-11, cnt);
+    }
+
+    /** Tests that descending set is ordered right and returns right values. */
+    @Test
+    public void testDescendingSet() {
+        UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
+        for (int i = 0; i < 10; i++) {
+            set.add(i);
+        }
+        for (int i = 1; i >= -10; i--) {
+            set.add(i);
+        }
+        for (int i = 20; i >= 10; i--) {
+            set.add(i);
+        }
+
+        UnbalancedBinaryTreeSet<Integer> reversedSet = (UnbalancedBinaryTreeSet<Integer>) set.descendingSet();
+
+        assertEquals(20, (int) reversedSet.first());
+        assertEquals(-10, (int) reversedSet.last());
+        assertEquals(13, (int) reversedSet.lower(12));
+        assertEquals(7, (int) reversedSet.higher(8));
+
+        int cnt = 20;
+        for (int x : reversedSet) {
+            assertEquals(cnt--, x);
+        }
+        assertEquals(-11, cnt);
+    }
+
+    /** Tests that first() in descending set throws exception. */
+    @Test(expected = NoSuchElementException.class)
+    public void testDescendingFirstThrowsException() {
+        UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
+        UnbalancedBinaryTreeSet<Integer> reversedSet = (UnbalancedBinaryTreeSet<Integer>) set.descendingSet();
+        reversedSet.first();
+    }
+
+    /** Tests that last() in descending set throws exception. */
+    @Test(expected = NoSuchElementException.class)
+    public void testDescendingLastThrowsException() {
+        UnbalancedBinaryTreeSet<Integer> set = new UnbalancedBinaryTreeSet<>();
+        UnbalancedBinaryTreeSet<Integer> reversedSet = (UnbalancedBinaryTreeSet<Integer>) set.descendingSet();
+        reversedSet.last();
     }
 
 }

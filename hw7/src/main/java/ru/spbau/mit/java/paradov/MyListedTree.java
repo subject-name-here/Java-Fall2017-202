@@ -7,11 +7,15 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Class used to store data in UnbalancedBinaryTreeSet. Basically, it's an unbalanced
+ * binary tree, but all elements are also forming the structure of linked list.
+ */
 public class MyListedTree<E> {
     /** Comparator used to compare elements in tree. */
     private Comparator<? super E> cmp;
 
-    /** Root of tree, in which we keep all elements. */
+    /** Root of this tree. */
     private Node root;
 
     /** Node that contains the lowest value. */
@@ -22,7 +26,7 @@ public class MyListedTree<E> {
     /** Number of elements in tree. */
     private int size = 0;
 
-
+    /** Constructor from comparator, that will be used to order elements. */
     public MyListedTree (@NotNull Comparator<? super E> comparator) {
         cmp = comparator;
         root = new Node();
@@ -46,18 +50,38 @@ public class MyListedTree<E> {
     }
 
 
+    /**
+     * Finds the greatest element in tree less than given.
+     * @param e given element
+     * @return the greatest element less than given, or null, if there is no such element
+     */
     public E lessThan(E e) {
         return root.lessThan(e);
     }
 
+    /**
+     * Finds the least element in tree greater than given.
+     * @param e given element
+     * @return the least element greater than given, or null, if there is no such element
+     */
     public E greaterThan(E e) {
         return root.greaterThan(e);
     }
 
+    /**
+     * Checks if given object is in tree.
+     * @param o object to find
+     * @return true, if object is in tree, false otherwise
+     */
     public boolean contains(Object o) {
         return root.containsInSubtree((E) o);
     }
 
+    /**
+     * Adds given value to tree; if it is already here, does nothing and returns false.
+     * @param e value to add
+     * @return true, if value was added in tree, false, if value already was in tree
+     */
     public boolean add(E e) {
         if (size == 0) {
             root = new Node(e, null);
@@ -85,6 +109,11 @@ public class MyListedTree<E> {
         return true;
     }
 
+    /**
+     * Removes value from tree; if there was no such value, returns false.
+     * @param o object to remove
+     * @return true, if object was successfully removed, false otherwise
+     */
     public boolean remove(Object o) {
         if (!contains(o))
             return false;
@@ -163,6 +192,11 @@ public class MyListedTree<E> {
         }
     }
 
+    /**
+     * Returns iterator over the list structure of tree.
+     * @param isReversed flag: true, if iterator is on reversed list, false otherwise
+     * @return iterator in specified by given flag order
+     */
     public MyListedTreeIterator iterator(boolean isReversed) {
         return new MyListedTreeIterator(isReversed);
     }
@@ -220,6 +254,11 @@ public class MyListedTree<E> {
             return value != null && findNode(that) != null;
         }
 
+        /**
+         * Finds in tree node with given value.
+         * @param that value to find
+         * @return node with given value, or null if there is no such node
+         */
         private Node findNode(E that) {
             if (this.value == null)
                 return null;
@@ -377,7 +416,7 @@ public class MyListedTree<E> {
     private class MyListedTreeIterator implements Iterator<E> {
         /** Points on node before which iterator stands. */
         private Node current;
-
+        /** Flag which defines order of iterator. */
         boolean isReversed;
 
         /**
