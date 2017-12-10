@@ -2,6 +2,8 @@ package ru.spbau.mit.java.paradov;
 
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.*;
 
 /** Tests functionality of class MyStack. */
@@ -52,15 +54,22 @@ public class MyStackTest {
         assertEquals(6, (int) stack.pop());
     }
 
-    /** Tests if pop() doesn't throw exceptions when calles on empty stack. */
-    @Test
-    public void testPopDoesNotThrowException() {
+    /** Tests if pop() does throw exceptions when called on empty stack. */
+    @Test(expected = NoSuchElementException.class)
+    public void testPopDoesThrowException() {
         MyStack<Integer> stack = new MyStack<>();
-        assertNull(stack.pop());
+        stack.pop();
+    }
+
+    /** Tests if pop() does throw exceptions when called on empty stack, that wasn't empty. */
+    @Test(expected = NoSuchElementException.class)
+    public void testPopDoesThrowException2() {
+        MyStack<Integer> stack = new MyStack<>();
 
         stack.push(2);
-        assertEquals(2, (int) stack.pop());
-        assertNull(stack.pop());
+        stack.pop();
+
+        stack.pop();
     }
 
     /** Tests if reverse() works as expected. */

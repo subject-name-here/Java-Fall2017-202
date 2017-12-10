@@ -35,12 +35,14 @@ public class Calculator {
             if (s.matches("^-?\\d+$")) {
                 numberStack.push(Integer.parseInt(s));
             } else {
-                Integer n2 = numberStack.pop();
-                Integer n1 = numberStack.pop();
 
-                if (n1 == null || n2 == null) {
+
+                if (numberStack.size() < 2) {
                     throw new IncorrectExpressionException();
                 }
+
+                Integer n2 = numberStack.pop();
+                Integer n1 = numberStack.pop();
 
                 switch (s) {
                     case "+":

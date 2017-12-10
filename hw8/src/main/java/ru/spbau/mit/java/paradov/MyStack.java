@@ -2,6 +2,8 @@ package ru.spbau.mit.java.paradov;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.NoSuchElementException;
+
 /**
  * This is a stack. It does not extends java.util.Stack, because there are a lot of things
  * we don't use. Instead, here is a stack, that can do push() and pop(). When stack is full,
@@ -32,8 +34,12 @@ public class MyStack<T> {
      * Pops element from stack (deletes from its back) and returns it or null, if stack is empty.
      * @return element that was popped, or null, if stack was empty
      */
-    public @Nullable T pop() {
-        return isEmpty() ? null : storage[--numOfElements];
+    public @Nullable T pop() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
+        return storage[--numOfElements];
     }
 
     /**

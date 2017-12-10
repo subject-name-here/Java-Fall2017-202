@@ -51,20 +51,28 @@ public class ExpressionParser {
 
         while (!expressionParts.isEmpty()) {
             String s = expressionParts.pop();
+
             if (s.matches("^-?\\d+$")) {
                 reversePolishNotationExpression.push(s);
             } else if (s.equals(")")) {
-                String tmp = operations.pop();
-                while (tmp != null && !tmp.equals("(")) {
+                boolean foundBrace = false;
+                while (!operations.isEmpty()) {
+                    String tmp = operations.pop();
+                    if (tmp.equals("(")) {
+                        foundBrace = true;
+                        break;
+                    }
                     reversePolishNotationExpression.push(tmp);
-                    tmp = operations.pop();
                 }
-                if (tmp == null)
+
+                if (!foundBrace) {
                     throw new IncorrectExpressionException();
+                }
+
             } else if (s.equals("(")) {
                 operations.push(s);
             } else {
-                String tmp = operations.pop();
+                /*String tmp = operations.pop();
                 int priorityOfOperator = operators.indexOf(s) / 2;
 
                 while (tmp != null) {
@@ -78,8 +86,31 @@ public class ExpressionParser {
                 if (tmp != null)
                     operations.push(tmp);
                 operations.push(s);
-            }
+                */
 
+
+                if (!operations.isEmpty()) {
+                    String tmp = "";
+                    int priorityOfOperator = operators.indexOf(s) / 2;
+
+                    boolean foundMoreImportantOperator = false;
+                    while (!operations.isEmpty()) {
+                        tmp = operations.pop();
+                        int priorityOfTmp = operators.indexOf(tmp) / 2;
+                        if (priorityOfOperator > priorityOfTmp) {
+                            foundMoreImportantOperator = true;
+                            break;
+                        }
+
+                        reversePolishNotationExpression.push(tmp);
+
+                    }
+                    if (foundMoreImportantOperator)
+                        operations.push(tmp);
+                }
+
+                operations.push(s);
+            }
         }
 
         while (!operations.isEmpty()) {
