@@ -7,8 +7,33 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-
+/**
+ * Tests for SmartList. Six of them (at the bottom of the class) are not mine.
+ */
 public class SmartListTest {
+    /** Tests if get() throws exception, if index is negative. */
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testExceptionThrownNegative() {
+        SmartList<Integer> list = new SmartList<>();
+        list.get(-1);
+    }
+
+    /** Tests if get() throws exception, if index is the same as than size. */
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testExceptionThrownTooBig() {
+        SmartList<Integer> list = new SmartList<>();
+        list.add(0, 4);
+        list.add(0, 3);
+        list.add(0, 2);
+        list.add(0, 1);
+        assertEquals(4, list.size());
+
+        list.get(4);
+    }
+
+    
+
+    // Not my tests.
 
     @Test
     public void testSimple() {
