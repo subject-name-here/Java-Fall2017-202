@@ -1,0 +1,8 @@
+language: java
+
+env:
+- HW_DIR=hw10
+- HW_DIR=hw11
+
+script: cd HW_DIR && gradle clean test
+
