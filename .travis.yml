@@ -3,5 +3,5 @@ language: java
 env:
 - HW_DIR=hw9
 
-script: cd HW_DIR && gradle clean test
+script: cd $HW_DIR && gradle clean test
 
