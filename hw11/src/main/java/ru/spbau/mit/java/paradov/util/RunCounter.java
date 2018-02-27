@@ -1,8 +1,8 @@
-package ru.spbau.mit.java.paradov;
+package ru.spbau.mit.java.paradov.util;
 
 import java.util.function.Supplier;
 
-public class LaunchCounter implements Supplier<Integer> {
+public class RunCounter implements Supplier<Integer> {
     private Integer counter = 0;
 
     @Override

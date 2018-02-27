@@ -95,10 +95,14 @@ public class LazyFactory {
          */
         @Override
         public T get() {
-            synchronized (this) {
-                if (!isResult) {
-                    supplierOrResult = ((Supplier<T>) supplierOrResult).get();
-                    isResult = true;
+            // This first condition used for optimization. If result is known, no need for blocking.
+            if (!isResult) {
+                synchronized (this) {
+                    // This second condition is necessary for threads who was waiting to take object.
+                    if (!isResult) {
+                        supplierOrResult = ((Supplier<T>) supplierOrResult).get();
+                        isResult = true;
+                    }
                 }
             }
 
