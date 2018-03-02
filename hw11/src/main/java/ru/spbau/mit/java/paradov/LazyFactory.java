@@ -77,7 +77,7 @@ public class LazyFactory {
          * If field isResult == false, then it stores supplier that will provide result on demand.
          * Otherwise, it keeps result that supplier gave.
          */
-        private Object supplierOrResult;
+        volatile private Object supplierOrResult;
 
         /**
          * Constructor of MultiThreadedLazy, initializing value field by given supplier.
