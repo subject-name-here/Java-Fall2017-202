@@ -1,5 +1,7 @@
 package ru.spbau.mit.java.paradov;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -55,6 +57,7 @@ public class LazyFactory {
          * @return a result
          */
         @Override
+        @Nullable
         public T get() {
             if (!isResult) {
                 supplierOrResult = ((Supplier<T>) supplierOrResult).get();
@@ -94,11 +97,10 @@ public class LazyFactory {
          * @return a result
          */
         @Override
+        @Nullable
         public T get() {
-            // This first condition used for optimization. If result is known, no need for blocking.
             if (!isResult) {
                 synchronized (this) {
-                    // This second condition is necessary for threads who was waiting to take object.
                     if (!isResult) {
                         supplierOrResult = ((Supplier<T>) supplierOrResult).get();
                         isResult = true;
