@@ -33,22 +33,20 @@ public class LazyFactory {
      * @param <T> type of object supplier returns
      */
     private static class SimpleLazy<T> implements Lazy<T> {
-        /** Flag that signals if second field is storing result. If false, it's supplier. */
-        private boolean isResult;
-
+        /** Result, provided by supplier. */
+        private T result;
         /**
-         * If field isResult == false, then it stores supplier that will provide result on demand.
-         * Otherwise, it keeps result that supplier gave.
+         * Supplier that provides result. When result is saved, supplier is becoming null,
+         * so we can detect if computation was done.
          */
-        private Object supplierOrResult;
+        private Supplier<T> supplier;
 
         /**
          * Constructor of SimpleLazy, initializing value field by given supplier.
          * @param supplier given supplier
          */
         private SimpleLazy(Supplier<T> supplier) {
-            supplierOrResult = supplier;
-            isResult = false;
+            this.supplier = supplier;
         }
 
         /**
@@ -59,12 +57,12 @@ public class LazyFactory {
         @Override
         @Nullable
         public T get() {
-            if (!isResult) {
-                supplierOrResult = ((Supplier<T>) supplierOrResult).get();
-                isResult = true;
+            if (supplier != null) {
+                result = supplier.get();
+                supplier = null;
             }
 
-            return (T) supplierOrResult;
+            return result;
         }
     }
 
@@ -73,22 +71,20 @@ public class LazyFactory {
      * @param <T> type of object supplier returns
      */
     private static class MultiThreadedLazy<T> implements Lazy<T> {
-        /** Flag that signals if second field is storing result. If false, it's supplier. */
-        private boolean isResult;
-
+        /** Result, provided by supplier. */
+        private volatile T result;
         /**
-         * If field isResult == false, then it stores supplier that will provide result on demand.
-         * Otherwise, it keeps result that supplier gave.
+         * Supplier that provides result. When result is saved, supplier is becoming null,
+         * so we can detect if computation was done.
          */
-        volatile private Object supplierOrResult;
+        private volatile Supplier<T> supplier;
 
         /**
          * Constructor of MultiThreadedLazy, initializing value field by given supplier.
          * @param supplier given supplier
          */
         private MultiThreadedLazy(Supplier<T> supplier) {
-            supplierOrResult = supplier;
-            isResult = false;
+            this.supplier = supplier;
         }
 
         /**
@@ -99,16 +95,16 @@ public class LazyFactory {
         @Override
         @Nullable
         public T get() {
-            if (!isResult) {
+            if (supplier != null) {
                 synchronized (this) {
-                    if (!isResult) {
-                        supplierOrResult = ((Supplier<T>) supplierOrResult).get();
-                        isResult = true;
+                    if (supplier != null) {
+                        result = supplier.get();
+                        supplier = null;
                     }
                 }
             }
 
-            return (T) supplierOrResult;
+            return result;
         }
     }
 }
