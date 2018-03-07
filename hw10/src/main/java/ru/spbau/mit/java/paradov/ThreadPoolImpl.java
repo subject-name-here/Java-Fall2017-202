@@ -86,7 +86,7 @@ public class ThreadPoolImpl<T> {
          */
         @Override
         public boolean isReady() {
-            return status == LightFutureStatus.READY;
+            return status != LightFutureStatus.NOT_READY;
         }
 
         /**
@@ -135,15 +135,17 @@ public class ThreadPoolImpl<T> {
          * this exception as a result.
          */
         private void computeResult() {
-            try {
-                result = supplier.get();
-            } catch (Exception e) {
-                result = e;
-                status = LightFutureStatus.FINISHED_WITH_EXCEPTION;
-            }
+            synchronized (monitor) {
+                try {
+                    result = supplier.get();
+                    status = LightFutureStatus.READY;
+                } catch (Exception e) {
+                    result = e;
+                    status = LightFutureStatus.FINISHED_WITH_EXCEPTION;
+                }
 
-            status = LightFutureStatus.READY;
-            monitor.notify();
+                monitor.notifyAll();
+            }
         }
     }
 
