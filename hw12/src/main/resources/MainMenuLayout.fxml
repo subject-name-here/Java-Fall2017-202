@@ -4,19 +4,32 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane alignment="center" hgap="10" prefHeight="300.0" prefWidth="300.0" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbau.mit.java.paradov.controllers.MainController">
-   <columnConstraints>
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbau.mit.java.paradov.controllers.MainController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
    <children>
-      <Button minHeight="30.0" minWidth="75.0" prefHeight="30.0" prefWidth="75.0" text="START!" GridPane.rowIndex="0" />
-      <Button minHeight="30.0" minWidth="75.0" prefHeight="30.0" prefWidth="75.0" text="Stats" GridPane.rowIndex="1" />
-      <Button cancelButton="true" minHeight="30.0" minWidth="75.0" onAction="#closeWindow" prefHeight="30.0" prefWidth="75.0" text="Exit" GridPane.rowIndex="2" />
+      <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#startGame" prefHeight="30.0" prefWidth="100.0" text="New Game" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#showStats" prefHeight="30.0" prefWidth="100.0" text="Stats" />
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#closeWindow" prefHeight="30.0" prefWidth="100.0" text="Exit" />
+         </children>
+      </VBox>
    </children>
 </GridPane>
