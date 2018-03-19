@@ -4,7 +4,6 @@ import org.junit.Test;
 import ru.spbau.mit.java.paradov.util.SupplierCollection;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -12,7 +11,7 @@ import static org.junit.Assert.*;
 public class ThreadPoolImplTest {
     /** Tests if LightFuture.get() works correctly. */
     @Test
-    public void testGet() {
+    public void testGet() throws Exception {
         ThreadPoolImpl<Integer> pool = new ThreadPoolImpl<>(3);
         LightFuture<Integer> result = pool.addTask(SupplierCollection.returnBasicSupplier(42));
         assertEquals(42, (int) result.get());
@@ -21,7 +20,7 @@ public class ThreadPoolImplTest {
 
     /** Tests if LightFuture.get() works correctly when it needs to wait. */
     @Test
-    public void testGetIsWaiting() {
+    public void testGetIsWaiting() throws Exception {
         ThreadPoolImpl<Integer> pool = new ThreadPoolImpl<>(3);
         LightFuture<Integer> result = pool.addTask(SupplierCollection.returnTimeSupplier(2));
         assertEquals(2, (int) result.get());
@@ -38,7 +37,7 @@ public class ThreadPoolImplTest {
 
     /** Tests that LightFuture.get() throws exception when it's expected. */
     @Test(expected = LightExecutionException.class)
-    public void testGetWithException() {
+    public void testGetWithException() throws Exception {
         ThreadPoolImpl<Integer> pool = new ThreadPoolImpl<>(3);
         LightFuture<Integer> result = pool.addTask(SupplierCollection.returnExceptionSupplier());
         result.get();
@@ -47,7 +46,7 @@ public class ThreadPoolImplTest {
 
     /** Tests how ThreadPoolImpl works with many tasks. */
     @Test
-    public void testMultitasking() {
+    public void testMultitasking() throws Exception {
         ThreadPoolImpl<Integer> pool = new ThreadPoolImpl<>(5);
         ArrayList<LightFuture<Integer>> tasks = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
@@ -62,7 +61,7 @@ public class ThreadPoolImplTest {
 
     /** Tests if LightFuture.thenApply() works correctly. */
     @Test
-    public void testMethodThenApply() {
+    public void testMethodThenApply() throws Exception {
         ThreadPoolImpl<Integer> pool = new ThreadPoolImpl<>(33);
         LightFuture<Integer> task = pool.addTask(SupplierCollection.returnBasicSupplier(3));
         LightFuture<Integer> result = task.thenApply(x -> x * x + 3 * x + 4);
@@ -72,7 +71,7 @@ public class ThreadPoolImplTest {
 
     /** Tests if LightFuture.thenApply() works correctly when it needs to wait. */
     @Test
-    public void testMethodThenApplyIsWaiting() {
+    public void testMethodThenApplyIsWaiting() throws Exception {
         ThreadPoolImpl<Integer> pool = new ThreadPoolImpl<>(3);
         LightFuture<Integer> task = pool.addTask(SupplierCollection.returnTimeSupplier(3));
         LightFuture<Integer> result = task.thenApply(x -> x * x * x + 1);
@@ -82,7 +81,7 @@ public class ThreadPoolImplTest {
 
     /** Tests some real parallel work: sum from 0 to amount * t. */
     @Test
-    public void testArrayOperationsParallel() {
+    public void testArrayOperationsParallel() throws Exception {
         ThreadPoolImpl<Long> pool = new ThreadPoolImpl<>(4);
         ArrayList<LightFuture<Long>> tasks = new ArrayList<>();
         final Long t = 250_000_000L;
@@ -103,7 +102,13 @@ public class ThreadPoolImplTest {
             // This formula is checked twice and it's correct for sure.
             assertEquals(t * (t / 2) * (2 * i + 1) - t / 2, (Object) tasks.get(i).get());
         }
-        Long finalResult = tasks.stream().mapToLong(LightFuture::get).sum();
+        Long finalResult = tasks.stream().mapToLong(lf -> {
+            try {
+                return lf.get();
+            } catch (LightExecutionException e) {
+                return t * t * amount * amount; // bigger than expected result
+            }
+        }).sum();
         assertEquals((t * amount - 1) * (t * amount) / 2, (Object) finalResult);
 
         /*
