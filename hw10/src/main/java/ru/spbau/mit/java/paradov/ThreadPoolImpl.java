@@ -65,10 +65,12 @@ public class ThreadPoolImpl<T> {
     private class ThreadTask implements LightFuture<T> {
         /** Supplier that provides value to compute. */
         private Supplier<T> supplier;
-        /** Status of computation. It can be READY, NOT_READY or FINISHED_WITH_EXCEPTION. */
-        private LightFutureStatus status = LightFutureStatus.NOT_READY;
-        /** It is either a result provided by supplier or exception thrown by it. */
-        private Object result;
+        /** Status of computation. If exception was thrown, computation is considered as finished. */
+        private boolean isComputationOver = false;
+        /** It is a result provided by supplier. */
+        private T result;
+        /** It is an exception thrown by supplier. */
+        private Exception exception;
 
         /** Monitor object to warn method get() when computation is done. */
         private final Object monitor = new Object();
@@ -86,7 +88,7 @@ public class ThreadPoolImpl<T> {
          */
         @Override
         public boolean isReady() {
-            return status != LightFutureStatus.NOT_READY;
+            return isComputationOver;
         }
 
         /**
@@ -103,17 +105,17 @@ public class ThreadPoolImpl<T> {
                         monitor.wait();
                     }
                 } catch (InterruptedException e) {
-                    status = LightFutureStatus.FINISHED_WITH_EXCEPTION;
-                    result = new Exception("Computation wasn't completed: " +
+                    isComputationOver = true;
+                    exception = new Exception("Computation wasn't completed: " +
                             "ThreadPool was shutdown.");
                 }
             }
 
-            if (status == LightFutureStatus.FINISHED_WITH_EXCEPTION) {
-                throw new LightExecutionException((Exception) result);
+            if (exception != null) {
+                throw new LightExecutionException(exception);
             }
 
-            return (T) result;
+            return result;
         }
 
         /**
@@ -138,12 +140,11 @@ public class ThreadPoolImpl<T> {
             synchronized (monitor) {
                 try {
                     result = supplier.get();
-                    status = LightFutureStatus.READY;
                 } catch (Exception e) {
-                    result = e;
-                    status = LightFutureStatus.FINISHED_WITH_EXCEPTION;
+                    exception = e;
                 }
 
+                isComputationOver = true;
                 monitor.notifyAll();
             }
         }
