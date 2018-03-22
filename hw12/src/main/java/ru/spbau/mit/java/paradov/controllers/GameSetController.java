@@ -5,16 +5,30 @@ import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.stage.Stage;
-import ru.spbau.mit.java.paradov.logic.GameLogic;
 import ru.spbau.mit.java.paradov.util.UtilFunctions;
 
+import java.io.IOException;
+
+/**
+ * Controller for game settings menu and its layout.
+ */
 public class GameSetController {
-    public void backToMenu(ActionEvent actionEvent) throws Exception {
+    /**
+     * Event handler for pressing GoBack button. Creates new scene for main menu layout.
+     * @param actionEvent event of pressing GoBack button
+     * @throws IOException if there is no main menu layout
+     */
+    public void backToMenu(ActionEvent actionEvent) throws IOException {
         Stage stage = UtilFunctions.getStageFromButtonActionEvent(actionEvent);
         UtilFunctions.setStage(getClass(), stage, "MainMenuLayout.fxml");
     }
 
-    public void beginGame(ActionEvent actionEvent) throws Exception {
+    /**
+     * Event handler for pressing BeginGame button. Creates new scene for game field layout.
+     * @param actionEvent event of pressing BeginGame button
+     * @throws IOException if there is no game field layout
+     */
+    public void beginGame(ActionEvent actionEvent) throws IOException {
         Stage stage = UtilFunctions.getStageFromButtonActionEvent(actionEvent);
         Scene scene = stage.getScene();
 
@@ -26,7 +40,6 @@ public class GameSetController {
 
         UtilFunctions.setStage(getClass(), stage, "GameFieldLayout.fxml");
 
-        GameFieldController.setupField(stage);
-        GameLogic.beginGame(stage, player1, player2);
+        GameFieldController.setupGame(stage, player1, player2);
     }
 }

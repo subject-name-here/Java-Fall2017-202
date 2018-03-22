@@ -22,6 +22,6 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" onAction="#goBack" text="Drop &amp; Go Back" GridPane.rowIndex="2" />
+      <Button fx:id="GoBack" mnemonicParsing="false" onAction="#goBack" text="Drop &amp; Go Back" GridPane.rowIndex="2" />
    </children>
 </GridPane>
