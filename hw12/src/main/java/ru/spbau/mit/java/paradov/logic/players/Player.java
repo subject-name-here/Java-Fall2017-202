@@ -22,7 +22,11 @@ public interface Player {
      */
     void makeMove(Field field, GameLogic game);
 
-
+    /**
+     * Turns string of player description to player.
+     * @param p description of player
+     * @return player
+     */
     static Player stringToPlayer(String p) {
         String playerType = p.substring(7);
         switch (playerType) {

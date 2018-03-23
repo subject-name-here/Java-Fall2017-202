@@ -18,7 +18,7 @@ public class GameLogic {
     /** Number of symbols that players need to put in line to win. */
     private static final int LINE = 3;
     /** Coordinates change on winning line. */
-    private static final int[] DIRECTIONS = {0, 1};
+    private static final int[] DIRECTIONS = {-1, 0, 1};
 
     /** Player 1, whose symbols are X. */
     private Player player1;
@@ -59,7 +59,7 @@ public class GameLogic {
      * handles it properly.
      */
     public void changeTurn() {
-        if (checkIfWin()) {
+        if (checkIfWin(field)) {
             gameOver = true;
             GameFieldController.finishGame(isXTurn ? GameResult.X_WON : GameResult.O_WON);
             return;
@@ -86,7 +86,7 @@ public class GameLogic {
      * Checks if someone has won on the field.
      * @return true, if there is winning line on field, false otherwise
      */
-    private boolean checkIfWin() {
+    public static boolean checkIfWin(Field field) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 char curr = field.getCell(i, j);
@@ -121,7 +121,6 @@ public class GameLogic {
      * and only then it makes move as current human-player.
      * @param r line where move is done
      * @param c column where move is done
-     * @return if move was valid and properly handled in logic
      */
     public void buttonPressed(Integer r, Integer c) {
         if (isXTurn && player1.isBot()

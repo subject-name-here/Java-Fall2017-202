@@ -8,7 +8,9 @@ public class Field {
     /** Field for empty spaces, X and O. */
     private char[][] field;
 
+    /** Number of rows in this field. */
     private int rows;
+    /** Number of columns in this field. */
     private int columns;
 
     /**
@@ -61,6 +63,19 @@ public class Field {
         field[r][c] = isXTurn ? 'X' : 'O';
     }
 
+    /**
+     * Frees given cell from mark.
+     * @param r row of the given cell
+     * @param c column of the given cell
+     */
+    public void freeCell(int r, int c) {
+        field[r][c] = ' ';
+    }
+
+    /**
+     * Checks if field is full, so no marks can be installed.
+     * @return true, if field is full, false otherwise
+     */
     public boolean isFull() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
