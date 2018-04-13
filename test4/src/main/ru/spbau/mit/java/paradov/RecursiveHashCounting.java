@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.concurrent.RecursiveTask;
 
 public class RecursiveHashCounting extends RecursiveTask<String> {
-
+    /** Files over which we iterate. */
     private File[] files;
     /** Indices in files: [ind1, ind2). */
     private int ind1;
