@@ -26,7 +26,7 @@ public class MainController {
      */
     public void showStats(ActionEvent actionEvent) throws IOException {
         Stage stage = UtilFunctions.getStageFromButtonActionEvent(actionEvent);
-        UtilFunctions.setStage(getClass(), stage, "StatsMenuLayout.fxml");
+        UtilFunctions.setStage(getClass(), stage, "/StatsMenuLayout.fxml");
 
         StatsMenuController.setStatsScene(stage);  // Init for labels from Stats class
     }
@@ -38,6 +38,6 @@ public class MainController {
      */
     public void startGame(ActionEvent actionEvent) throws Exception {
         Stage stage = UtilFunctions.getStageFromButtonActionEvent(actionEvent);
-        UtilFunctions.setStage(getClass(), stage, "GameSetLayout.fxml");
+        UtilFunctions.setStage(getClass(), stage, "/GameSetLayout.fxml");
     }
 }

@@ -33,6 +33,6 @@ public class StatsMenuController {
      */
     public void returnToMenu(ActionEvent actionEvent) throws IOException {
         Stage stage = UtilFunctions.getStageFromButtonActionEvent(actionEvent);
-        UtilFunctions.setStage(getClass(), stage, "MainMenuLayout.fxml");
+        UtilFunctions.setStage(getClass(), stage, "/MainMenuLayout.fxml");
     }
 }

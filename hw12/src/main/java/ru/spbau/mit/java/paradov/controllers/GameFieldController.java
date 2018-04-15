@@ -118,6 +118,6 @@ public class GameFieldController {
      * @throws IOException if there is no game settings layout
      */
     public void goBack(ActionEvent actionEvent) throws IOException {
-        UtilFunctions.setStage(getClass(), currentStage, "GameSetLayout.fxml");
+        UtilFunctions.setStage(getClass(), currentStage, "/GameSetLayout.fxml");
     }
 }

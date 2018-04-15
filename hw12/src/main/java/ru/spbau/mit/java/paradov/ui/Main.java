@@ -19,7 +19,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("MainMenuLayout.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/MainMenuLayout.fxml"));
         primaryStage.setTitle("Tic-Tac-Toe");
         primaryStage.setMinHeight(300);
         primaryStage.setMinWidth(300);

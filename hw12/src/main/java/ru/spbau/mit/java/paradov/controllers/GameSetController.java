@@ -20,7 +20,7 @@ public class GameSetController {
      */
     public void backToMenu(ActionEvent actionEvent) throws IOException {
         Stage stage = UtilFunctions.getStageFromButtonActionEvent(actionEvent);
-        UtilFunctions.setStage(getClass(), stage, "MainMenuLayout.fxml");
+        UtilFunctions.setStage(getClass(), stage, "/MainMenuLayout.fxml");
     }
 
     /**
@@ -38,7 +38,7 @@ public class GameSetController {
         Toggle p2 = (Toggle) scene.lookup("#Player2Human");
         String player2 = ((RadioButton) p2.getToggleGroup().getSelectedToggle()).getId();
 
-        UtilFunctions.setStage(getClass(), stage, "GameFieldLayout.fxml");
+        UtilFunctions.setStage(getClass(), stage, "/GameFieldLayout.fxml");
 
         GameFieldController.setupGame(stage, player1, player2);
     }

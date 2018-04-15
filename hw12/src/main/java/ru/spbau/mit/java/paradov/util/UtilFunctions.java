@@ -31,7 +31,7 @@ public class UtilFunctions {
      * @throws IOException if there is no such layout
      */
     public static void setStage(Class<?> controller, Stage stage, String layout) throws IOException {
-        Parent root = FXMLLoader.load(controller.getClassLoader().getResource(layout));
+        Parent root = FXMLLoader.load(controller.getResource(layout));
         stage.setScene(new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight()));
     }
 
