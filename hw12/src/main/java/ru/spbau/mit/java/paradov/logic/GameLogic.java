@@ -16,9 +16,9 @@ public class GameLogic {
     public static final int COLUMNS = 3;
 
     /** Number of symbols that players need to put in line to win. */
-    private static final int LINE = 3;
+    public static final int LINE = 3;
     /** Coordinates change on winning line. */
-    private static final int[] DIRECTIONS = {-1, 0, 1};
+    public static final int[] DIRECTIONS = {-1, 0, 1};
 
     /** Player 1, whose symbols are X. */
     private Player player1;
