@@ -1,9 +1,7 @@
 package ru.spbau.mit.java.paradov.controllers;
 
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,9 +20,6 @@ public class FieldController {
     /** Stage where this layout placed. Needed to change some labels after endgame. */
     private static Stage currentStage;
 
-    /** All buttons on the field. */
-    private static Button[][] buttonField;
-
     /** Values hidden under the buttons. */
     private static int[][] values;
 
@@ -42,7 +37,6 @@ public class FieldController {
         int fieldSize = Main.getFieldSize();
 
         currentStage = stage;
-        buttonField = new Button[fieldSize][fieldSize];
 
         GridPane metaField = (GridPane) stage.getScene().lookup("#MetaField");
         GridPane field = new GridPane();
@@ -60,7 +54,6 @@ public class FieldController {
 
                 // Coordinates are in wrong order, because it's said so in signature of method.
                 field.add(button, j, i);
-                buttonField[i][j] = button;
             }
         }
 
