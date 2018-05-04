@@ -1,7 +1,7 @@
 language: java
 
 env:
-- HW_DIR=hw10
+- HW_DIR=hw13
 
 script: cd $HW_DIR && gradle test
 
