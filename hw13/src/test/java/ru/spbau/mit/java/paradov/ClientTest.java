@@ -47,8 +47,6 @@ public class ClientTest {
 
         String expected = "3\n" + "folder true\n" + "kek1 false\n" + "kek2 false\n\n";
 
-        System.err.println("actual: ");
-        System.err.println(baos.toString());
         assertEquals(expected, baos.toString());
     }
 
