@@ -7,6 +7,9 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 
 import static org.junit.Assert.*;
 
@@ -22,8 +25,13 @@ public class ClientTest {
     }
 
     @AfterClass
-    public static void killServer() {
+    public static void cleanServer() {
         serverThread.interrupt();
+        try {
+            FileUtils.cleanDirectory(new File("downloads"));
+        } catch (IOException e) {
+            System.err.println("Failed to delete objects from \"downloads\". Please, do it manually.");
+        }
     }
 
     @Test
@@ -37,6 +45,7 @@ public class ClientTest {
 
         String expected = "3\n" + "folder true\n" + "kek1 false\n" + "kek2 false\n\n";
 
+        System.out.println(baos.toString());
         assertEquals(expected, baos.toString());
     }
 
@@ -51,6 +60,7 @@ public class ClientTest {
 
         String expected = "0\n\n";
 
+        System.out.println(baos.toString());
         assertEquals(expected, baos.toString());
     }
 
@@ -70,8 +80,9 @@ public class ClientTest {
         assertEquals(expected, baos.toString());
     }
 /*
+    @Test
     public void testGetFile() {
-        String query = "2 src/test/resources/dir1/kek1".replace("/", File.separator);
+        String query = "2 src/test/resources/dir1/kek1\n e".replace("/", File.separator);
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -79,7 +90,6 @@ public class ClientTest {
         client.run(bais, baos);
 
 
-
-        assertEquals(expected, baos.toString());
+        //assertEquals();
     }*/
 }

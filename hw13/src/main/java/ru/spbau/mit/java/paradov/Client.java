@@ -122,7 +122,8 @@ public class Client {
     private void saveFile(DataInputStream dis, String filename) throws IOException {
         addDownloadsDirectory();
 
-        filename = "downloads" + File.separator + filename;
+        File tmp = new File(filename);
+        filename = "downloads" + File.separator + tmp.getName();
         long size = dis.readLong();
 
         byte[] buf = new byte[BUF_SIZE];
