@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -149,7 +150,9 @@ public class Server {
         }
 
         StringBuilder result = new StringBuilder();
-        for (File f : dir.listFiles()) {
+        File[] files = dir.listFiles();
+        Arrays.sort(files);
+        for (File f : files) {
             result.append(f.getName()).append(' ').append(f.isDirectory()).append('\n');
         }
 

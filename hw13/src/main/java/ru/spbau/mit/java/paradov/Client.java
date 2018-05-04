@@ -38,7 +38,7 @@ public class Client {
         PrintWriter pw = new PrintWriter(out, true);
 
         while (true) {
-            pw.println("Write command (h for help, e for exit).");
+            //pw.println("Write command (h for help, e for exit).");
 
             String type = sc.next();
             if (type.equals("h")) {
