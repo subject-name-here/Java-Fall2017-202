@@ -31,6 +31,8 @@ public class ClientTest {
             FileUtils.cleanDirectory(new File("downloads"));
         } catch (IOException e) {
             System.err.println("Failed to delete objects from \"downloads\". Please, do it manually.");
+        } catch (IllegalArgumentException e) {
+            // Do nothing: directory wasn't created.
         }
     }
 
@@ -45,7 +47,8 @@ public class ClientTest {
 
         String expected = "3\n" + "folder true\n" + "kek1 false\n" + "kek2 false\n\n";
 
-        System.out.println(baos.toString());
+        System.err.println("actual: ");
+        System.err.println(baos.toString());
         assertEquals(expected, baos.toString());
     }
 
@@ -60,7 +63,6 @@ public class ClientTest {
 
         String expected = "0\n\n";
 
-        System.out.println(baos.toString());
         assertEquals(expected, baos.toString());
     }
 
@@ -79,7 +81,7 @@ public class ClientTest {
 
         assertEquals(expected, baos.toString());
     }
-/*
+
     @Test
     public void testGetFile() {
         String query = "2 src/test/resources/dir1/kek1\n e".replace("/", File.separator);
@@ -91,5 +93,5 @@ public class ClientTest {
 
 
         //assertEquals();
-    }*/
+    }
 }
