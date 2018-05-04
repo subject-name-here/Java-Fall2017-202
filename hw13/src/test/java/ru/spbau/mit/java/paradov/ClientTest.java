@@ -81,15 +81,34 @@ public class ClientTest {
     }
 
     @Test
-    public void testGetFile() {
-        String query = "2 src/test/resources/dir1/kek1\n e".replace("/", File.separator);
+    public void testGetFile() throws IOException {
+        String file = "src/test/resources/dir1/kek1".replace("/", File.separator);
+        String query = "2 " + file + "\n e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Client client = new Client("localhost", PORT_NUMBER);
         client.run(bais, baos);
 
+        File original = new File(file);
+        String actualPath = "downloads/kek1".replace("/", File.separator);
+        File actual = new File(actualPath);
+        assertTrue(FileUtils.contentEquals(original, actual));
+    }
 
-        //assertEquals();
+    @Test
+    public void testGetBigFile() throws IOException {
+        String file = "src/test/resources/BigFile".replace("/", File.separator);
+        String query = "2 " + file + "\n e";
+        ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        Client client = new Client("localhost", PORT_NUMBER);
+        client.run(bais, baos);
+
+        File original = new File(file);
+        String actualPath = "downloads/BigFile".replace("/", File.separator);
+        File actual = new File(actualPath);
+        assertTrue(FileUtils.contentEquals(original, actual));
     }
 }

@@ -167,8 +167,8 @@ public class Server {
      */
     private void returnFile(String path, DataOutputStream dos) throws IOException {
         File f = new File(path);
-        if (!f.isFile()) {
-            dos.write("0".getBytes());
+        if (f.isDirectory()) {
+            dos.writeLong(0);
             return;
         }
 
