@@ -1,6 +1,13 @@
 package ru.spbau.mit.java.paradov;
 
+/**
+ * Class that launches work with client.
+ */
 public class ClientMain {
+    /**
+     * Starts client that connecnts to given host name and port number
+     * @param args args for client launch: host name and port number
+     */
     public static void main(String[] args) {
         if (args.length < 2) {
             throw new NotEnoughArgumentsException("Expected at least two arguments: host name & port number.");
