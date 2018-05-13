@@ -42,7 +42,7 @@ public class MainController {
                         TreeItem<Item> item = tree.getSelectionModel().getSelectedItem();
                         if (!item.getValue().isDirectory) {
                             //System.err.println(item.getValue().shortName);
-                            client.sendQuery(2, item.getValue().name, null);
+                            client.sendQuery(2, item.getValue().name);
                         }
                     } catch (Exception e) {
                         // do nothing
@@ -133,7 +133,7 @@ public class MainController {
         }
 
         private ObservableList<TreeItem<Item>> buildChildren(MyTreeItem treeItem) throws IOException {
-            String[] response = client.sendQuery(1, value.name, null);
+            String[] response = client.sendQuery(1, value.name);
             ObservableList<TreeItem<Item>> children = FXCollections.observableArrayList();
 
             if (response.length == 0)
