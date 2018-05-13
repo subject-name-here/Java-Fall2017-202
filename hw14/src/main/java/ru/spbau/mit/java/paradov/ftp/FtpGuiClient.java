@@ -32,7 +32,6 @@ public class FtpGuiClient {
      * Sends query to server, then process its answer.
      * @param type type of query (1 or 2)
      * @param path path to file we need in query
-     * @param pw PrintWriter where we will write file list (when type == 1)
      * @throws IOException if there is a problem with reading or writing from/to socket
      */
     public String[] sendQuery(int type, String path) throws IOException {

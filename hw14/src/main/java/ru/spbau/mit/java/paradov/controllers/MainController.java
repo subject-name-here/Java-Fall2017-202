@@ -3,50 +3,55 @@ package ru.spbau.mit.java.paradov.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import ru.spbau.mit.java.paradov.ftp.FtpGuiClient;
 import ru.spbau.mit.java.paradov.util.UtilFunctions;
 
 import java.io.IOException;
 
 /**
- * Controller for main menu and its layout.
+ * Controller for main menu and its layout. This thing is a browser that connects to server with given port and browses
+ * the files on server side.
  */
 public class MainController {
+    /** Client that asks queries from server. */
     private static FtpGuiClient client;
+    /** Delimiter that is used on server side as file separator. */
     private static String delimiter;
+    /** Root directory for file browsing. */
     private static String root;
-    private static Stage stage;
+
+    /** Files tree that is displayed on screen. */
     private TreeView<Item> tree;
 
+    /** Label that shows the root or something else, such as download status. */
     public Label path;
+    /** Grid that contains everything on main stage. */
     public GridPane grid;
 
+    /**
+     * Initializes class: places TreeView on grid, sets label.
+     */
     @FXML
     public void initialize() {
         path.setText(root);
         TreeItem<Item> rootItem = new MyTreeItem(new Item("", root + " true"));
         tree = new TreeView<>(rootItem);
-        tree.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2) {
-                    try {
-                        TreeItem<Item> item = tree.getSelectionModel().getSelectedItem();
-                        if (!item.getValue().isDirectory) {
-                            //System.err.println(item.getValue().shortName);
-                            client.sendQuery(2, item.getValue().name);
-                        }
-                    } catch (Exception e) {
-                        // do nothing
+        tree.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                TreeItem<Item> item = tree.getSelectionModel().getSelectedItem();
+                try {
+
+                    if (!item.getValue().isDirectory) {
+                        client.sendQuery(2, item.getValue().name);
                     }
+                    path.setText("File " + item.getValue().shortName + " downloaded!");
+                } catch (Exception e) {
+                    path.setText("File " + item.getValue().shortName + ": failed to download!");
                 }
             }
         });
@@ -54,10 +59,16 @@ public class MainController {
         grid.add(tree, 0, 1);
     }
 
-    public static void setupMain(String hostName, String portNumber, String delimiter, String root, Stage stage) {
+    /**
+     * Sets some fields in class.
+     * @param hostName name of host
+     * @param portNumber string that contains number of port; if it's incorrect, then port is set to default
+     * @param delimiter delimiter that will be used to query lists
+     * @param root place for file browsing
+     */
+    public static void setupMain(String hostName, String portNumber, String delimiter, String root) {
         MainController.root = root;
         MainController.delimiter = delimiter;
-        MainController.stage = stage;
 
         Integer portNum = UtilFunctions.stringToIntOrElse(portNumber, FtpGuiClient.DEFAULT_PORT);
         if (portNum < 0 || portNum >= 65536) {
@@ -76,54 +87,78 @@ public class MainController {
     }
 
 
-
+    /**
+     * Class for TreeView item that contains file info, such as full name, short name and if this file is directory.
+     */
     private class Item {
+        /** Full name of file (based on root). */
         private String name;
+        /** Last name of file. */
         private String shortName;
-
+        /** Flag that detects if this file is a directory. */
         private boolean isDirectory;
 
+        /**
+         * Constructs item from path to file and server response.
+         * @param path path to file
+         * @param response response from server about this file
+         */
         public Item(String path, String response) {
             shortName = response.substring(0, response.lastIndexOf(" "));
-            if (path.equals("")) {
-                name = shortName;
-            } else if (path.equals("/")) {
-                name = "/" + shortName;
-            } else {
-                name = path + delimiter + shortName;
+            switch (path) {
+                case "":
+                    name = shortName;
+                    break;
+                case "/":
+                    name = "/" + shortName;
+                    break;
+                default:
+                    name = path + delimiter + shortName;
+                    break;
             }
 
             isDirectory = Boolean.valueOf(response.substring(response.lastIndexOf(" ") + 1));
         }
 
+        /** Show of the item in file tree. */
         @Override
         public String toString() {
-            //return shortName + " (" + isDirectory + ")";
             return shortName;
         }
     }
 
+    /**
+     * Class that extends TreeItem with ability to upload data about file content dynamically.
+     */
     private class MyTreeItem extends TreeItem<Item> {
+        /** Item that associates with this tree item. */
         private Item value;
+        /** Flag that detects if children items were already uploaded, so there is no need to query them. */
         private boolean childrenLoaded;
 
+        /** Constructs TreeItem from Item: saves item and initializes flag.  */
         public MyTreeItem(Item value) {
             super(value);
             this.value = value;
             childrenLoaded = false;
         }
 
+        /** Tells if this tree item is a leaf, which is the same as if this item associated with not directory. */
         @Override
         public boolean isLeaf() {
             return !value.isDirectory;
         }
 
+        /**
+         * Returns tree items that are children of this tree item.
+         * @return list of tree items that are children of this tree item
+         */
         @Override
         public ObservableList<TreeItem<Item>> getChildren() {
             if (!childrenLoaded) {
                 childrenLoaded = true;
                 try {
-                    super.getChildren().setAll(buildChildren(this));
+                    super.getChildren().setAll(buildChildren());
                 } catch (IOException e) {
                     System.err.println(e.toString());
                     //return FXCollections.emptyObservableList();
@@ -132,7 +167,12 @@ public class MainController {
             return super.getChildren();
         }
 
-        private ObservableList<TreeItem<Item>> buildChildren(MyTreeItem treeItem) throws IOException {
+        /**
+         * Creates list of tree item children by querying them from server.
+         * @return list of children of this tree item
+         * @throws IOException if some error on server happened or it's impossible to read info
+         */
+        private ObservableList<TreeItem<Item>> buildChildren() throws IOException {
             String[] response = client.sendQuery(1, value.name);
             ObservableList<TreeItem<Item>> children = FXCollections.observableArrayList();
 
