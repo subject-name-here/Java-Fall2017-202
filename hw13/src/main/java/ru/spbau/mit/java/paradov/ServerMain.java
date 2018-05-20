@@ -14,6 +14,7 @@ public class ServerMain {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.err.println("Expected at least one argument: port number.");
+            return;
         }
 
         int portNumber = Integer.parseInt(args[0]);

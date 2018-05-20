@@ -9,8 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Class that implements server. Allows to query list files by given way and download file to
- * directory "downloads/".
+ * Class that implements server. Allows to query list files by given way and download file.
  */
 public class Server {
     /** Server socket. */
