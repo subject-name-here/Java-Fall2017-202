@@ -93,8 +93,13 @@ public class Server {
                 if (type == QueryType.LIST_FILES.getValue()) {
                     File dir = new File(path);
                     if (dir.isDirectory()) {
-                        dos.writeInt(dir.listFiles().length);
-                        dos.write(getFilesList(dir).getBytes());
+                        try {
+                            dos.writeInt(dir.listFiles().length);
+                            dos.write(getFilesList(dir).getBytes());
+                        } catch (NullPointerException e) {
+                            System.err.println("For some reason, can't get list of files in " + dir.getName());
+                            dos.writeInt(0);
+                        }
                     } else {
                         dos.writeInt(0);
                     }
