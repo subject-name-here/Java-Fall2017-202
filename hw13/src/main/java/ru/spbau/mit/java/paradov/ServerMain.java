@@ -10,11 +10,10 @@ public class ServerMain {
      * Runs server on given port. Also it waits until you write in command line word "stop",
      * so it will stop server and this method too.
      * @param args given args; first argument must be port number.
-     * @throws NotEnoughArgumentsException if there is not enough args (at least one must be)
      */
     public static void main(String[] args) {
         if (args.length == 0) {
-            throw new NotEnoughArgumentsException("Expected at least one argument: port number.");
+            System.err.println("Expected at least one argument: port number.");
         }
 
         int portNumber = Integer.parseInt(args[0]);

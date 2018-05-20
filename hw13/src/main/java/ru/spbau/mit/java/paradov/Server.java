@@ -91,7 +91,7 @@ public class Server {
 
                 String path = getPath(dis);
 
-                if (type == 1) {
+                if (type == QueryType.LIST_FILES.getValue()) {
                     File dir = new File(path);
                     if (dir.isDirectory()) {
                         dos.writeInt(dir.listFiles().length);
@@ -99,7 +99,7 @@ public class Server {
                     } else {
                         dos.writeInt(0);
                     }
-                } else if (type == 2) {
+                } else if (type == QueryType.DOWNLOAD_FILE.getValue()) {
                     returnFile(path, dos);
                 } else {
                     dos.write("Unknown operation type.".getBytes());
@@ -153,7 +153,7 @@ public class Server {
         File[] files = dir.listFiles();
         Arrays.sort(files);
         for (File f : files) {
-            result.append(f.getName()).append(' ').append(f.isDirectory()).append('\n');
+            result.append(f.getName()).append(' ').append(f.isDirectory()).append(System.lineSeparator());
         }
 
         return result.toString();

@@ -82,7 +82,7 @@ public class Client {
             dos.flush();
             s.shutdownOutput();
 
-            if (type == 1) {
+            if (type == QueryType.LIST_FILES.getValue()) {
                 getList(dis, pw);
             } else {
                 saveFile(dis, path);

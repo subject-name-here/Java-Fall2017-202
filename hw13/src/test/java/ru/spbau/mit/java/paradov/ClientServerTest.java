@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 
 import static org.junit.Assert.*;
 
-public class ClientTest {
+public class ClientServerTest {
     private static final int PORT_NUMBER = 22229;
     private static Thread serverThread;
 
@@ -36,46 +36,48 @@ public class ClientTest {
         }
     }
 
+    public static String sep = System.lineSeparator();
+
     @Test
     public void testGetList() {
-        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir1\n e";
+        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir1" + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Client client = new Client("localhost", PORT_NUMBER);
         client.run(bais, baos);
 
-        String expected = "3\n" + "folder true\n" + "kek1 false\n" + "kek2 false\n\n";
+        String expected = "3" + sep + "folder true" + sep + "kek1 false" + sep + "kek2 false" + sep + sep;
 
         assertEquals(expected, baos.toString());
     }
 
     @Test
     public void testGetEmptyList() {
-        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir0\n e";
+        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir0" + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Client client = new Client("localhost", PORT_NUMBER);
         client.run(bais, baos);
 
-        String expected = "0\n\n";
+        String expected = "0" + sep + sep;
 
         assertEquals(expected, baos.toString());
     }
 
     @Test
     public void testGetList2() {
-        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir2\n e";
+        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir2" + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Client client = new Client("localhost", PORT_NUMBER);
         client.run(bais, baos);
 
-        String expected = "7\n" + "f1 false\n" + "f2 false\n" + "finf false\n"
-                + "k1 true\n" + "k2 true\n" + "k3 true\n"
-                + "the file false\n\n";
+        String expected = "7" + sep + "f1 false" + sep + "f2 false" + sep + "finf false" + sep
+                + "k1 true" + sep + "k2 true" + sep + "k3 true" + sep
+                + "the file false" + sep + sep;
 
         assertEquals(expected, baos.toString());
     }
@@ -83,7 +85,7 @@ public class ClientTest {
     @Test
     public void testGetFile() throws IOException {
         String file = "src/test/resources/dir1/kek1".replace("/", File.separator);
-        String query = "2 " + file + "\n e";
+        String query = "2 " + file + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -99,7 +101,7 @@ public class ClientTest {
     @Test
     public void testGetBigFile() throws IOException {
         String file = "src/test/resources/BigFile".replace("/", File.separator);
-        String query = "2 " + file + "\n e";
+        String query = "2 " + file + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

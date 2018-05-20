@@ -10,7 +10,8 @@ public class ClientMain {
      */
     public static void main(String[] args) {
         if (args.length < 2) {
-            throw new NotEnoughArgumentsException("Expected at least two arguments: host name & port number.");
+            System.err.println("Error: expected at least two arguments: host name & port number.");
+            return;
         }
 
         String hostName = args[0];
