@@ -39,7 +39,7 @@ public class MainController {
     @FXML
     public void initialize() {
         path.setText(root);
-        TreeItem<Item> rootItem = new MyTreeItem(new Item("", root + " true"));
+        TreeItem<Item> rootItem = new MyTreeItem(new Item(root,  " true"));
         tree = new TreeView<>(rootItem);
         tree.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
@@ -105,17 +105,7 @@ public class MainController {
          */
         public Item(String path, String response) {
             shortName = response.substring(0, response.lastIndexOf(" "));
-            switch (path) {
-                case "":
-                    name = shortName;
-                    break;
-                case "/":
-                    name = "/" + shortName;
-                    break;
-                default:
-                    name = path + delimiter + shortName;
-                    break;
-            }
+            name = path + delimiter + shortName;
 
             isDirectory = Boolean.valueOf(response.substring(response.lastIndexOf(" ") + 1));
         }
@@ -161,6 +151,7 @@ public class MainController {
                     super.getChildren().setAll(buildChildren());
                 } catch (IOException e) {
                     System.err.println(e.toString());
+                    childrenLoaded = false;
                     //return FXCollections.emptyObservableList();
                 }
             }

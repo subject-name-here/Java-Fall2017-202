@@ -35,6 +35,13 @@ public class UtilFunctions {
         stage.setScene(new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight()));
     }
 
+    /**
+     * Very util function that parses string to integer. If it doesn't parses, returns argument that given as
+     * default int.
+     * @param maybeInt string that we want to parse
+     * @param defaultInt integer that we return if string is not integer
+     * @return integer representation of string or default int
+     */
     public static Integer stringToIntOrElse(String maybeInt, Integer defaultInt) {
         Integer result;
         try {

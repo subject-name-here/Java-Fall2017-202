@@ -72,7 +72,7 @@ public class FtpGuiClient {
             list.append(new String(buf, 0, readSymbols));
         }
 
-        return list.toString().split("\n");
+        return list.toString().split(System.lineSeparator());
     }
 
     /**
