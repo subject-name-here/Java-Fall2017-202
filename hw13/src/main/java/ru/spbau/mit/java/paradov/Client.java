@@ -85,7 +85,9 @@ public class Client {
             if (type == QueryType.LIST_FILES.getValue()) {
                 getList(dis, pw);
             } else {
-                saveFile(dis, path);
+                if (saveFile(dis, path)) {
+                    pw.println("File was successfully saved!");
+                }
             }
 
         } catch (UnknownHostException e) {
@@ -119,12 +121,17 @@ public class Client {
      * @param filename name of file we want to get
      * @throws IOException if there is a problem with reading from socket or saving file
      */
-    private void saveFile(DataInputStream dis, String filename) throws IOException {
+    private boolean saveFile(DataInputStream dis, String filename) throws IOException {
+        long size = dis.readLong();
+
+        /*if (size == 0 && !checkFile(filename)) {
+            return;
+        }*/
+
         addDownloadsDirectory();
 
         File tmp = new File(filename);
         filename = "downloads" + File.separator + tmp.getName();
-        long size = dis.readLong();
 
         byte[] buf = new byte[BUF_SIZE];
         int readSymbols;
@@ -133,9 +140,12 @@ public class Client {
             while ((readSymbols = dis.read(buf)) != -1) {
                 dos.write(buf, 0, readSymbols);
             }
+
+            return true;
         } catch (FileNotFoundException e) {
             System.err.println("Failed to create file: ");
             System.err.println(e.getMessage());
+            return false;
         }
     }
 

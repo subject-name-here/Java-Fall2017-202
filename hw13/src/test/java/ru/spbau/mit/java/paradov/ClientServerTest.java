@@ -2,14 +2,13 @@ package ru.spbau.mit.java.paradov;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
 
@@ -38,23 +37,32 @@ public class ClientServerTest {
 
     public static String sep = System.lineSeparator();
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     @Test
-    public void testGetList() {
-        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir1" + sep + "e";
+    public void testGetList() throws IOException {
+        folder.newFile("tfile1");
+        folder.newFile("tfile2");
+        TemporaryFolder fold = new TemporaryFolder(folder.newFolder("fold"));
+        fold.create();
+        fold.newFile("never_to_be_shown");
+
+        String query = "1 " + folder.getRoot().getPath() + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Client client = new Client("localhost", PORT_NUMBER);
         client.run(bais, baos);
 
-        String expected = "3" + sep + "folder true" + sep + "kek1 false" + sep + "kek2 false" + sep + sep;
+        String expected = "3" + sep + "fold true" + sep + "tfile1 false" + sep + "tfile2 false" + sep + sep;
 
         assertEquals(expected, baos.toString());
     }
 
     @Test
     public void testGetEmptyList() {
-        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir0" + sep + "e";
+        String query = "1 " + folder.getRoot().getPath() + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -67,8 +75,20 @@ public class ClientServerTest {
     }
 
     @Test
-    public void testGetList2() {
-        String query = "1 src" + File.separator + "test" + File.separator + "resources" + File.separator + "dir2" + sep + "e";
+    public void testGetList2() throws IOException {
+        folder.newFile("f1");
+        folder.newFile("f2");
+        folder.newFile("finf");
+        folder.newFile("the file");
+        TemporaryFolder k1 = new TemporaryFolder(folder.newFolder("k1"));
+        TemporaryFolder k2 = new TemporaryFolder(folder.newFolder("k2"));
+        TemporaryFolder k3 = new TemporaryFolder(folder.newFolder("k3"));
+        k1.create();
+        k2.create();
+        k3.create();
+        k1.newFile("never_to_be_shown");
+
+        String query = "1 " + folder.getRoot() + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -84,18 +104,21 @@ public class ClientServerTest {
 
     @Test
     public void testGetFile() throws IOException {
-        String file = "src/test/resources/dir1/kek1".replace("/", File.separator);
-        String query = "2 " + file + sep + "e";
+        File f = folder.newFile("file");
+        PrintWriter pw = new PrintWriter(f);
+        String content = "Paris, 1923. Laying penguin, burning house. ";
+        pw.print(content);
+
+        String query = "2 " + f.getPath() + sep + "e";
         ByteArrayInputStream bais = new ByteArrayInputStream(query.getBytes());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Client client = new Client("localhost", PORT_NUMBER);
         client.run(bais, baos);
 
-        File original = new File(file);
-        String actualPath = "downloads/kek1".replace("/", File.separator);
+        String actualPath = "downloads/file".replace("/", File.separator);
         File actual = new File(actualPath);
-        assertTrue(FileUtils.contentEquals(original, actual));
+        assertTrue(FileUtils.contentEquals(f, actual));
     }
 
     @Test
