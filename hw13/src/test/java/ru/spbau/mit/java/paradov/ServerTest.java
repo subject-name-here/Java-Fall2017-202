@@ -7,20 +7,23 @@ import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
 
+/** Tests work of server alone. */
 public class ServerTest {
     private static final int PORT_NUMBER = 22229;
     private static final int BUF_SIZE = 1024;
+    /** Thread where server is running. */
     private static Thread serverThread;
 
+    /** Line separator for this filesystem. */
     private static String sep = System.lineSeparator();
 
+    /** Launches server before every test. */
     @BeforeClass
     public static void setUpServer() {
         Server server = new Server(PORT_NUMBER);
@@ -28,21 +31,17 @@ public class ServerTest {
         serverThread.start();
     }
 
+    /** Stops server after test.*/
     @AfterClass
     public static void cleanServer() {
         serverThread.interrupt();
-        try {
-            FileUtils.cleanDirectory(new File("downloads"));
-        } catch (IOException e) {
-            System.err.println("Failed to delete objects from \"downloads\". Please, do it manually.");
-        } catch (IllegalArgumentException e) {
-            // Do nothing: directory wasn't created.
-        }
     }
 
+    /** Temporary folder for files to list. */
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
+    /** Tests listing of files. */
     @Test
     public void testGetList() throws IOException {
         folder.newFile("tfile1");
@@ -69,6 +68,7 @@ public class ServerTest {
         }
     }
 
+    /** Tests listing of empty directory. */
     @Test
     public void testGetEmptyList() throws IOException {
         try (Socket s = new Socket("localhost", PORT_NUMBER);
@@ -85,6 +85,7 @@ public class ServerTest {
         }
     }
 
+    /** Tests listing of files, but it's bigger. */
     @Test
     public void testGetList2() throws IOException {
         folder.newFile("f1");
@@ -120,6 +121,7 @@ public class ServerTest {
         }
     }
 
+    /** Tests getting file from server. */
     @Test
     public void testGetFile() throws IOException {
         String file = "src/test/resources/OrdinaryFile".replace("/", File.separator);
@@ -143,6 +145,7 @@ public class ServerTest {
         }
     }
 
+    /** Tests response on non-existing file. */
     @Test
     public void testGetNonExistingFile() throws IOException {
         String file = "src/test/resources/NonExistingFile".replace("/", File.separator);
@@ -161,8 +164,7 @@ public class ServerTest {
             assertEquals(-1, n);
         }
     }
-
-
+    
     private StringBuilder readFromDataInputStream(DataInputStream dis) throws IOException {
         StringBuilder sb = new StringBuilder();
         byte[] buf = new byte[BUF_SIZE];

@@ -12,11 +12,17 @@ import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests communication of client and server together.
+ */
 public class ClientServerTest {
     private static final int PORT_NUMBER = 22229;
+    /** Thread where server is running. */
     private static Thread serverThread;
+    /** Line separator for this filesystem. */
     private static String sep = System.lineSeparator();
 
+    /** Launches server before every test. */
     @BeforeClass
     public static void setUpServer() {
         Server server = new Server(PORT_NUMBER);
@@ -24,6 +30,7 @@ public class ClientServerTest {
         serverThread.start();
     }
 
+    /** Stops server and deletes downloads directory after test ends. */
     @AfterClass
     public static void cleanServer() {
         serverThread.interrupt();
@@ -36,9 +43,11 @@ public class ClientServerTest {
         }
     }
 
+    /** Temporary folder for files to list. */
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
+    /** Tests listing of files. */
     @Test
     public void testGetList() throws IOException {
         folder.newFile("tfile1");
@@ -59,6 +68,7 @@ public class ClientServerTest {
         assertEquals(expected, baos.toString());
     }
 
+    /** Tests listing of empty directory. */
     @Test
     public void testGetEmptyList() {
         String query = "1 " + folder.getRoot().getPath() + sep + "e";
@@ -73,6 +83,7 @@ public class ClientServerTest {
         assertEquals(expected, baos.toString());
     }
 
+    /** Tests listing of files, but it's bigger. */
     @Test
     public void testGetList2() throws IOException {
         folder.newFile("f1");
@@ -101,6 +112,7 @@ public class ClientServerTest {
         assertEquals(expected, baos.toString());
     }
 
+    /** Tests getting file from server. */
     @Test
     public void testGetFile() throws IOException {
         File f = folder.newFile("file");
@@ -120,6 +132,7 @@ public class ClientServerTest {
         assertTrue(FileUtils.contentEquals(f, actual));
     }
 
+    /** Tests getting bigger file from server. */
     @Test
     public void testGetBigFile() throws IOException {
         String file = "src/test/resources/BigFile".replace("/", File.separator);
