@@ -15,10 +15,11 @@ import static org.junit.Assert.*;
 public class ClientServerTest {
     private static final int PORT_NUMBER = 22229;
     private static Thread serverThread;
+    private static String sep = System.lineSeparator();
 
     @BeforeClass
     public static void setUpServer() {
-        Server server = new Server(22229);
+        Server server = new Server(PORT_NUMBER);
         serverThread = new Thread(server::run);
         serverThread.start();
     }
@@ -34,8 +35,6 @@ public class ClientServerTest {
             // Do nothing: directory wasn't created.
         }
     }
-
-    public static String sep = System.lineSeparator();
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();

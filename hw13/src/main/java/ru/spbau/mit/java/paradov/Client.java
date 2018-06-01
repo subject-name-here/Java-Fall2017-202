@@ -18,7 +18,7 @@ public class Client {
     private static final int BUF_SIZE = 1024;
 
     /**
-     * Constructor that initializes fileds.
+     * Constructor that initializes fields.
      * @param hostName name of host
      * @param portNumber port number
      */
@@ -60,6 +60,8 @@ public class Client {
                 }
             } else if (type.equals("e")) {
                 break;
+            } else {
+                pw.println("Unknown command. Print \"h\" for help");
             }
 
         }
@@ -84,9 +86,11 @@ public class Client {
 
             if (type == QueryType.LIST_FILES.getValue()) {
                 getList(dis, pw);
-            } else {
+            } else if (type == QueryType.DOWNLOAD_FILE.getValue()) {
                 if (saveFile(dis, path)) {
                     pw.println("File was successfully saved!");
+                } else {
+                    pw.println("Couldn't save file!");
                 }
             }
 
@@ -124,9 +128,9 @@ public class Client {
     private boolean saveFile(DataInputStream dis, String filename) throws IOException {
         long size = dis.readLong();
 
-        /*if (size == 0 && !checkFile(filename)) {
-            return;
-        }*/
+        if (size == -1) {
+            return false;
+        }
 
         addDownloadsDirectory();
 

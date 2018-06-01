@@ -35,7 +35,7 @@ public class Server {
             System.err.println("Error when tried to create a server: ");
             System.err.println(e.getMessage());
             System.err.println("Emergency stop.");
-            System.exit(1);
+            System.exit(0);
         }
 
         pool = Executors.newFixedThreadPool(10);
@@ -106,7 +106,7 @@ public class Server {
                 } else if (type == QueryType.DOWNLOAD_FILE.getValue()) {
                     returnFile(path, dos);
                 } else {
-                    dos.write("Unknown operation type.".getBytes());
+                    System.err.println("Unknown operation type.");
                 }
 
                 dos.flush();
@@ -155,6 +155,10 @@ public class Server {
 
         StringBuilder result = new StringBuilder();
         File[] files = dir.listFiles();
+        if (files == null) {
+            return "";
+        }
+
         Arrays.sort(files);
         for (File f : files) {
             result.append(f.getName()).append(' ').append(f.isDirectory()).append(System.lineSeparator());
@@ -171,8 +175,8 @@ public class Server {
      */
     private void returnFile(String path, DataOutputStream dos) throws IOException {
         File f = new File(path);
-        if (f.isDirectory()) {
-            dos.writeLong(0);
+        if (!f.isFile()) {
+            dos.writeLong(-1);
             return;
         }
 
