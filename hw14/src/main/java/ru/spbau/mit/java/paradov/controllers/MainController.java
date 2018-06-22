@@ -8,10 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
-import ru.spbau.mit.java.paradov.ftp.FtpGuiClient;
+import ru.spbau.mit.java.paradov.ftp.Client;
 import ru.spbau.mit.java.paradov.util.UtilFunctions;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Controller for main menu and its layout. This thing is a browser that connects to server with given port and browses
@@ -19,7 +21,7 @@ import java.io.IOException;
  */
 public class MainController {
     /** Client that asks queries from server. */
-    private static FtpGuiClient client;
+    private static Client client;
     /** Delimiter that is used on server side as file separator. */
     private static String delimiter;
     /** Root directory for file browsing. */
@@ -32,6 +34,8 @@ public class MainController {
     public Label path;
     /** Grid that contains everything on main stage. */
     public GridPane grid;
+
+    private static final int DEFAULT_PORT = 22229;
 
     /**
      * Initializes class: places TreeView on grid, sets label.
@@ -47,7 +51,7 @@ public class MainController {
                 try {
 
                     if (!item.getValue().isDirectory) {
-                        client.sendQuery(2, item.getValue().name);
+                        client.sendQuery(2, item.getValue().name, new PrintWriter(new StringWriter()));
                     }
                     path.setText("File " + item.getValue().shortName + " downloaded!");
                 } catch (Exception e) {
@@ -70,12 +74,12 @@ public class MainController {
         MainController.root = root;
         MainController.delimiter = delimiter;
 
-        Integer portNum = UtilFunctions.stringToIntOrElse(portNumber, FtpGuiClient.DEFAULT_PORT);
+        Integer portNum = UtilFunctions.stringToIntOrElse(portNumber, DEFAULT_PORT);
         if (portNum < 0 || portNum >= 65536) {
-            portNum = FtpGuiClient.DEFAULT_PORT;
+            portNum = DEFAULT_PORT;
         }
 
-        client = new FtpGuiClient(hostName, portNum);
+        client = new Client(hostName, portNum);
     }
 
     /**
@@ -164,14 +168,18 @@ public class MainController {
          * @throws IOException if some error on server happened or it's impossible to read info
          */
         private ObservableList<TreeItem<Item>> buildChildren() throws IOException {
-            String[] response = client.sendQuery(1, value.name);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            client.sendQuery(1, value.name, pw);
+
+            String[] response = sw.toString().split(System.lineSeparator());
             ObservableList<TreeItem<Item>> children = FXCollections.observableArrayList();
 
             if (response.length == 0)
                 return children;
 
             for (String s : response) {
-                if (s.equals(""))
+                if (s.isEmpty() || !s.contains(" "))
                     continue;
 
                 TreeItem<Item> child = new MyTreeItem(new Item(value.name, s));
